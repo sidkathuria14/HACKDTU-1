@@ -91,7 +91,7 @@ public class ConditionsActivity extends AppCompatActivity implements View.OnClic
                 addDateNTimeView();
                 break;
             case R.drawable.ic_location_on_white_24dp:
-                startActivity(new Intent(this,testSetLocationActivity.class));
+                startActivity(new Intent(this,SetLocationActivity.class));
                 break;
             case R.id.floatingSaveBtn:
                 setWakeUpAlarmForApp();

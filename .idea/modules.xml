@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Auto-Task.iml" filepath="$PROJECT_DIR$/Auto-Task.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Auto-task.iml" filepath="$PROJECT_DIR$/Auto-task.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

@@ -1,19 +1,28 @@
 package com.example.limit_breaker.auto_task.services;
 
+import android.app.Activity;
 import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
+import android.media.AudioManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
+import android.telephony.SmsManager;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
 
 import com.example.limit_breaker.auto_task.MainActivity;
 import com.example.limit_breaker.auto_task.R;
+import com.example.limit_breaker.auto_task.SmsDeliveredReceiver;
+import com.example.limit_breaker.auto_task.SmsSentReceiver;
 import com.example.limit_breaker.auto_task.activities.ConditionsActivity;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofenceStatusCodes;
@@ -25,17 +34,53 @@ import java.util.List;
 
 public class GeofenceTrasitionService extends IntentService {
 
-    private static final String TAG = "Chui";
+    private static final String TAG = "GeofenceLocation";
     public static final int GEOFENCE_NOTIFICATION_ID = 0;
-
+    public static final String ACTION_SMS_SENT = "com.techblogon.android.apis.os.SMS_SENT_ACTION";
     public GeofenceTrasitionService() {
         super(GeofenceTrasitionService.class.getSimpleName());
     }
+    public void onClickSend(View v)
+    {
+        //Get recipient from user and check for null
+//        if (TextUtils.isEmpty(recipientTextEdit.getText())) {
+//            titleTextView.setText("Enter Receipent");
+//            titleTextView.setTextColor(Color.RED);
+//            return;
+//        }
+
+        //Get content and check for null
+//        if (TextUtils.isEmpty(contentTextEdit.getText())) {
+//            titleTextView.setText("Empty Content");
+//            titleTextView.setTextColor(Color.RED);
+//            return;
+//        }
+
+    }
+
 
     @Override
     protected void onHandleIntent(Intent intent) {
         // Retrieve the Geofencing intent
         GeofencingEvent geofencingEvent = GeofencingEvent.fromIntent(intent);
+        Log.d(TAG, "onHandleIntent: ");
+        AudioManager audioManager = (AudioManager) getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
+        audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+
+//        //sms body coming from user input
+//        String strSMSBody = "hey I am at location- " + " . It seems its not safe over here.Please remain in touch .";
+//        //sms recipient added by user from the activity screen
+//        String strReceipentsList = "8076997187";
+//        //recipientTextEdit.getText().toString();
+//        SmsManager sms = SmsManager.getDefault();
+//        List<String> messages = sms.divideMessage(strSMSBody);
+//        for (String message : messages) {
+//            sms.sendTextMessage(strReceipentsList, null, message, PendingIntent.getBroadcast(
+//                    this, 0, new Intent(ACTION_SMS_SENT), 0), null);
+//        }
+
+
+
 
         // Handling errors
         if ( geofencingEvent.hasError() ) {
@@ -58,7 +103,30 @@ public class GeofenceTrasitionService extends IntentService {
             sendNotification( geofenceTransitionDetails );
         }
     }
+    private void sendSMS(String phoneNumber, String message) {
+        ArrayList<PendingIntent> sentPendingIntents = new ArrayList<PendingIntent>();
+        ArrayList<PendingIntent> deliveredPendingIntents = new ArrayList<PendingIntent>();
+        PendingIntent sentPI = PendingIntent.getBroadcast(getApplicationContext(), 0,
+                new Intent(getApplicationContext(), SmsSentReceiver.class), 0);
+        PendingIntent deliveredPI = PendingIntent.getBroadcast(getApplicationContext(), 0,
+                new Intent(getApplicationContext(), SmsDeliveredReceiver.class), 0);
+        try {
+            SmsManager sms = SmsManager.getDefault();
+            ArrayList<String> mSMSMessage = sms.divideMessage(message);
+            for (int i = 0; i < mSMSMessage.size(); i++) {
+                sentPendingIntents.add(i, sentPI);
+                deliveredPendingIntents.add(i, deliveredPI);
+            }
+            sms.sendMultipartTextMessage(phoneNumber, null, mSMSMessage,
+                    sentPendingIntents, deliveredPendingIntents);
 
+        } catch (Exception e) {
+
+            e.printStackTrace();
+            Toast.makeText(getBaseContext(), "SMS sending failed...",Toast.LENGTH_SHORT).show();
+        }
+
+    }
     // Create a detail message with Geofences received
     private String getGeofenceTrasitionDetails(int geoFenceTransition, List<Geofence> triggeringGeofences) {
         // get the ID of each geofence triggered

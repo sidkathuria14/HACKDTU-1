@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.limit_breaker.auto_task.R;
+import com.example.limit_breaker.auto_task.RatingFragment;
 import com.example.limit_breaker.auto_task.services.GeofenceTrasitionService;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -33,6 +34,7 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
@@ -254,6 +256,8 @@ public class SetLocationActivity extends AppCompatActivity
     @Override
     public void onMapClick(LatLng latLng) {
         Log.d(TAG, "onMapClick: "+latLng);
+        RatingFragment ratingFragment = new RatingFragment();
+        ratingFragment.show(getFragmentManager(),"pui");
         markerForGeofence(latLng);
     }
 
@@ -297,6 +301,7 @@ public class SetLocationActivity extends AppCompatActivity
 
     private Geofence createGeofence(LatLng latLng, float radius ) {
         Log.d(TAG, "createGeofence");
+        Log.d(TAG, "createGeofence: "+latLng.latitude+":"+latLng.longitude);
         return new Geofence.Builder()
                 .setRequestId(GEOFENCE_REQ_ID)
                 .setCircularRegion( latLng.latitude, latLng.longitude, radius)
