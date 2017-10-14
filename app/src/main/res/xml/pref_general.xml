@@ -1,0 +1,45 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+
+    <!-- NOTE: EditTextPreference accepts EditText attributes. -->
+    <!-- NOTE: EditTextPreference's summary should be set to its value by the activity code. -->
+    <EditTextPreference
+        android:capitalize="words"
+        android:defaultValue="1"
+        android:inputType="textCapWords"
+        android:key="example_text"
+        android:summary=""
+        android:maxLines="1"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="Name" />
+    <EditTextPreference
+        android:title="contact 1"
+        android:id="@+id/contact1"
+        android:inputType="number"
+        />
+    <EditTextPreference
+        android:title="contact 2"
+        android:id="@+id/contact2"
+        android:inputType="number"
+        />
+    <SwitchPreference
+        android:title="Enable Notifications for  prone areas"
+        android:id="@+id/SwitchNotification"
+        android:defaultValue="true"
+        />
+
+    <!-- NOTE: Hide buttons to simplify the UI. Users can touch outside the dialog to
+         dismiss it. -->
+    <!-- NOTE: ListPreference's summary should be set to its value by the activity code. -->
+    <!--<ListPreference-->
+        <!--android:defaultValue="-1"-->
+        <!--android:entries="@array/pref_example_list_titles"-->
+        <!--android:entryValues="@array/pref_example_list_values"-->
+        <!--android:key="example_list"-->
+        <!--android:negativeButtonText="@null"-->
+        <!--android:positiveButtonText="@null"-->
+        <!--android:title="@string/pref_title_add_friends_to_messages" />-->
+
+</PreferenceScreen>
